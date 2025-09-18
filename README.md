@@ -12,7 +12,7 @@ Run `virtualenv env` and then `source env/bin/activate`.
 
 ## Running
 
-Run `export SI_API_KEY="cat $(key)"` and then `python si_auth.py AWS::EC2::VPC`.
+Run `export SI_API_KEY="$(cat key)"` and then `python si_auth.py AWS::EC2::VPC`.
 
 ## Orientation
 

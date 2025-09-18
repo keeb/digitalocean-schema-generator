@@ -193,9 +193,48 @@ function main() {
 #### Authentication Function
 ```typescript
 async function main(secret: Input): Promise<Output> {
-    // Store the DO API token in request storage for use by other functions
     requestStorage.setEnv("DO_API_TOKEN", secret.ApiToken);
 }
+```
+
+#### Qualification Function
+```typescript
+async function main(_component: Input): Promise < Output > {
+    const token = requestStorage.getEnv("DO_API_TOKEN");
+    if (!token) {
+        return {
+            result: "failure",
+            message: 'Credentials are empty'
+        };
+    }
+
+    const response = await fetch(`https://api.digitalocean.com/v2/account`, {
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) {
+        return {
+            result: "failure",
+            message: `API call failed: ${response.status} ${response.statusText}`
+        };
+    }
+
+    return {
+        result: "success",
+        message: 'Credentials are Valid'
+    };
+}
+```
+
+The following three files should be created:
+
+```
+digitalocean-auth-func.js
+digitalocean-credential-schema.js
+digitalocean-qualification-func.js
 ```
 
 ### DigitalOcean API Access Example:
