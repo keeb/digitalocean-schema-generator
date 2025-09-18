@@ -259,7 +259,8 @@ class SI:
             "name": name,
         }
 
-        print(schema_data)
+        if DEBUG:
+            print(schema_data)
 
         ret = requests.post(
             f"{self.base_url}/v1/w/{self.session.workspace_id}/change-sets/{self.change_set_id}/schemas",
