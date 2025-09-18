@@ -149,6 +149,14 @@ class SI:
         else:
             raise Exception(f"Failed to get logs")
 
+    def create_or_use_change_set(self, name):
+        existing_change_set_id = self.find_change_set_by_name(name)
+        if existing_change_set_id:
+            self.change_set_id = existing_change_set_id
+            return existing_change_set_id
+        else:
+            return self.create_change_set(name)
+
     def abandon_change_set(self, name=None):
         if not self.change_set_id and not name:
             raise Exception("no change set created and also no name provided.")
@@ -176,9 +184,7 @@ class SI:
         if ret.ok:
             return ret.json()
         else:
-            raise Exception(
-                f"Failed to search schemas: {ret.status_code} - {ret.text}"
-            )
+            raise Exception(f"Failed to search schemas: {ret.status_code} - {ret.text}")
 
     def get_schema(self, schema_id):
         if not self.change_set_id:
@@ -195,11 +201,12 @@ class SI:
         if ret.ok:
             return ret.json()
         elif ret.status_code == 202:
-            return {"status": "generating", "message": "Schema data is being generated from cached modules"}
+            return {
+                "status": "generating",
+                "message": "Schema data is being generated from cached modules",
+            }
         else:
-            raise Exception(
-                f"Failed to get schema: {ret.status_code} - {ret.text}"
-            )
+            raise Exception(f"Failed to get schema: {ret.status_code} - {ret.text}")
 
     def get_schema_variant_default(self, schema_id):
         if not self.change_set_id:
@@ -235,11 +242,50 @@ class SI:
         if ret.ok:
             return ret.json()
         else:
-            raise Exception(
-                f"Failed to get func: {ret.status_code} - {ret.text}"
-            )
+            raise Exception(f"Failed to get func: {ret.status_code} - {ret.text}")
 
-    def update_schema_variant(self, schema_id, schema_variant_id, name, description, link, category, color, code):
+    def create_schema(
+        self, category, code, name, description, color="#3B82F6", link=""
+    ):
+        if not self.change_set_id:
+            raise Exception("change set must be created first")
+
+        schema_data = {
+            "category": category,
+            "code": code,
+            "color": color,
+            "description": description,
+            "link": link,
+            "name": name,
+        }
+
+        print(schema_data)
+
+        ret = requests.post(
+            f"{self.base_url}/v1/w/{self.session.workspace_id}/change-sets/{self.change_set_id}/schemas",
+            headers=headers,
+            json=schema_data,
+        )
+
+        if DEBUG:
+            print(ret.text)
+
+        if ret.ok:
+            return ret.json()
+        else:
+            raise Exception(f"Failed to create schema: {ret.status_code} - {ret.text}")
+
+    def update_schema_variant(
+        self,
+        schema_id,
+        schema_variant_id,
+        name,
+        description,
+        link,
+        category,
+        color,
+        code,
+    ):
         if not self.change_set_id:
             raise Exception("change set must be created first")
 

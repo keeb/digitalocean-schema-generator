@@ -45,9 +45,7 @@ function main() {
         .setDocumentation("A unique identifier that differentiates this key from other keys using a format that SSH recognizes. The fingerprint is created when the key is added to your account.")
         .build();
 
-    const assetFunc = new AssetFunctionBuilder()
-        .setName("DigitalOcean::Security::SSHKey")
-        .setDescription("Creates a DigitalOcean SSH key instance")
+    const assetFunc = new AssetBuilder()
         .addProp(nameProp)
         .addProp(publicKeyProp)
         .addProp(idProp)

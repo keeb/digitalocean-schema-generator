@@ -1,6 +1,6 @@
 function main() {
     const awsCredential = new SecretDefinitionBuilder()
-        .setName("AWS Credential")
+        .setName("AWS Credential2")
         .addProp(
             new PropBuilder()
             .setName("SessionToken")
