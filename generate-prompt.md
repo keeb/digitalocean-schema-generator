@@ -147,6 +147,39 @@ Write the complete schema to a file named: `{resource-name}-schema.js`
 - **VPCs**: Include IP range validation
 - **Firewalls**: Include port ranges, protocol options
 
+### DigitalOcean Credential Component:
+
+Create a credential component to securely store and manage API tokens. Use this pattern:
+
+#### Credential Schema (`do-credential.ts`):
+```typescript
+function main() {
+    const doCredential = new SecretDefinitionBuilder()
+        .setName("DigitalOcean Credential")
+        .addProp(
+            new PropBuilder()
+            .setName("ApiToken")
+            .setKind("string")
+            .setWidget(
+                new PropWidgetDefinitionBuilder()
+                .setKind("password")
+                .build()
+            ).build())
+        .build();
+    return new AssetBuilder()
+        .defineSecret(doCredential)
+        .build()
+}
+```
+
+#### Authentication Function (`do-credential-auth.ts`):
+```typescript
+async function main(secret: Input): Promise<Output> {
+    // Store the DO API token in request storage for use by other functions
+    requestStorage.setEnv("DO_API_TOKEN", secret.ApiToken);
+}
+```
+
 ### DigitalOcean API Access Example:
 
 Use this fetch function to access the DigitalOcean API with the DO_API_TOKEN environment variable:
