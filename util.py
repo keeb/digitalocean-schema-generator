@@ -314,3 +314,34 @@ class SI:
             raise Exception(
                 f"Failed to update schema variant: {ret.status_code} - {ret.text}"
             )
+
+    def create_schema_variant_authentication_func(self, schema_id, schema_variant_id, name, code, display_name=None, description=None):
+        if not self.change_set_id:
+            raise Exception("change set must be created first")
+
+        func_data = {
+            "name": name,
+            "code": code,
+        }
+
+        if display_name:
+            func_data["display_name"] = display_name
+
+        if description:
+            func_data["description"] = description
+
+        ret = requests.post(
+            f"{self.base_url}/v1/w/{self.session.workspace_id}/change-sets/{self.change_set_id}/schemas/{schema_id}/variant/{schema_variant_id}/funcs/authentication",
+            headers=headers,
+            json=func_data,
+        )
+
+        if DEBUG:
+            print(ret.text)
+
+        if ret.ok:
+            return ret.json()
+        else:
+            raise Exception(
+                f"Failed to create schema variant authentication func: {ret.status_code} - {ret.text}"
+            )
