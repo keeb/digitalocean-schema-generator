@@ -147,4 +147,46 @@ Write the complete schema to a file named: `{resource-name}-schema.js`
 - **VPCs**: Include IP range validation
 - **Firewalls**: Include port ranges, protocol options
 
+### DigitalOcean API Access Example:
+
+Use this fetch function to access the DigitalOcean API with the DO_API_TOKEN environment variable:
+
+```typescript
+// Simple DigitalOcean API fetch function using environment variable
+async function doApiFetch(endpoint: string, options: RequestInit = {}) {
+  const token = process.env.DO_API_TOKEN;
+  if (!token) {
+    throw new Error('DO_API_TOKEN environment variable is required');
+  }
+
+  const response = await fetch(`https://api.digitalocean.com/v2${endpoint}`, {
+    ...options,
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      ...options.headers,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`API Error: ${response.status} ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+// Example usage:
+const droplets = await doApiFetch('/droplets');
+const regions = await doApiFetch('/regions');
+const newDroplet = await doApiFetch('/droplets', {
+  method: 'POST',
+  body: JSON.stringify({
+    name: 'my-droplet',
+    region: 'nyc3',
+    size: 's-1vcpu-1gb',
+    image: 'ubuntu-20-04-x64'
+  })
+});
+```
+
 Generate the complete schema now for: `{RESOURCE_NAME}`
