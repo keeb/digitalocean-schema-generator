@@ -113,14 +113,12 @@ function main() {
         .addChild(/* child props */)
         .build();
 
-    // Create the asset function
-    const assetFunc = new AssetFunctionBuilder()
-        .setName("DigitalOcean::{Service}::{Resource}")
-        .setDescription("Creates a DigitalOcean {resource} instance")
+    // Create the asset
+    const asset = new AssetBuilder()
         .addProp(/* all props */)
         .build();
 
-    return assetFunc;
+    return asset;
 }
 ```
 
