@@ -149,9 +149,9 @@ Write the complete schema to a file named: `{resource-name}-schema.js`
 
 ### DigitalOcean Credential Component:
 
-Create a credential component to securely store and manage API tokens. Use this pattern:
+Create a credential component to allow other components to subscribe to the secret in order to make calls to the DigitalOcean API. Use this pattern:
 
-#### Credential Schema (`do-credential.ts`):
+#### Credential Schema
 ```typescript
 function main() {
     const doCredential = new SecretDefinitionBuilder()
@@ -172,7 +172,7 @@ function main() {
 }
 ```
 
-#### Authentication Function (`do-credential-auth.ts`):
+#### Authentication Function
 ```typescript
 async function main(secret: Input): Promise<Output> {
     // Store the DO API token in request storage for use by other functions
@@ -182,22 +182,20 @@ async function main(secret: Input): Promise<Output> {
 
 ### DigitalOcean API Access Example:
 
-Use this fetch function to access the DigitalOcean API with the DO_API_TOKEN environment variable:
+Use this fetch function to access the DigitalOcean API with the `DO_API_TOKEN` environment variable:
 
 ```typescript
 // Simple DigitalOcean API fetch function using environment variable
 async function doApiFetch(endpoint: string, options: RequestInit = {}) {
-  const token = process.env.DO_API_TOKEN;
+  const token = requestStorage.getEnv("DO_API_TOKEN");
   if (!token) {
-    throw new Error('DO_API_TOKEN environment variable is required');
+    throw new Error('DO_API_TOKEN not found (hint: you may need a secret)');
   }
 
   const response = await fetch(`https://api.digitalocean.com/v2${endpoint}`, {
-    ...options,
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
-      ...options.headers,
     },
   });
 
@@ -208,7 +206,7 @@ async function doApiFetch(endpoint: string, options: RequestInit = {}) {
   return response.json();
 }
 
-// Example usage:
+// Example usages:
 const droplets = await doApiFetch('/droplets');
 const regions = await doApiFetch('/regions');
 const newDroplet = await doApiFetch('/droplets', {
