@@ -135,7 +135,27 @@ function main() {
   - Kubernetes → `DigitalOcean::Container::Cluster`
 
 ### Output Format:
-Write the complete schema to a file named: `{resource-name}-schema.js`
+Create a new directory: `prompts/{resource-name}/`
+Write the complete schema to: `prompts/{resource-name}/{resource-name}-schema.js`
+Create a metadata file: `prompts/{resource-name}/metadata.json`
+
+### Metadata File Format:
+```json
+{
+  "name": "{Human-readable resource name}",
+  "description": "{Brief description of what this resource does}",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#{resource-section}"
+}
+```
+
+Example metadata for Droplet:
+```json
+{
+  "name": "DigitalOcean Droplet",
+  "description": "Virtual private servers that can be used to run applications and host websites",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Droplets"
+}
+```
 
 ### Resource-Specific Notes:
 - **Droplets**: Include size options, image options, region options
