@@ -1,0 +1,5 @@
+{
+  "name": "DigitalOcean Container Registry",
+  "description": "Private Docker image registry for storing and managing container images with integrated security scanning and team management",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Container-Registry"
+}

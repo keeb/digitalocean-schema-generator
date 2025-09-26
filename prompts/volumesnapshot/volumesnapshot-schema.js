@@ -1,0 +1,157 @@
+function main() {
+    // Volume ID property (required) - The source volume to create snapshot from
+    const volumeIdProp = new PropBuilder()
+        .setName("volume_id")
+        .setKind("string")
+        .setHidden(false)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .setCreateOnly()
+            .build())
+        .setValidationFormat(Joi.string().required().uuid())
+        .setDocumentation("The ID of the block storage volume to create a snapshot from.")
+        .build();
+
+    // Name property (required)
+    const nameProp = new PropBuilder()
+        .setName("name")
+        .setKind("string")
+        .setHidden(false)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .setCreateOnly()
+            .build())
+        .setValidationFormat(Joi.string().required().max(255).pattern(/^[a-zA-Z0-9]?[a-z0-9A-Z.\-]*[a-z0-9A-Z]$/))
+        .setDocumentation("A human-readable name for the volume snapshot.")
+        .build();
+
+    // Tags property (optional)
+    const tagsProp = new PropBuilder()
+        .setName("tags")
+        .setKind("array")
+        .setHidden(false)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("array")
+            .build())
+        .setEntry(
+            new PropBuilder()
+                .setName("tags_item")
+                .setKind("string")
+                .setWidget(new PropWidgetDefinitionBuilder().setKind("text").build())
+                .setValidationFormat(Joi.string())
+                .build()
+        )
+        .setValidationFormat(Joi.array().items(Joi.string()).default([]))
+        .setDocumentation("A flat array of tag names as strings to be applied to the resource. Tag names may be for either existing or new tags. Requires `tag:create` scope.")
+        .build();
+
+    // Read-only properties (returned after creation but not settable during creation)
+
+    // ID property (read-only)
+    const idProp = new PropBuilder()
+        .setName("id")
+        .setKind("string")
+        .setHidden(true)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .build())
+        .setValidationFormat(Joi.string().uuid())
+        .setDocumentation("The unique identifier for the volume snapshot.")
+        .build();
+
+    // Created at property (read-only)
+    const createdAtProp = new PropBuilder()
+        .setName("created_at")
+        .setKind("string")
+        .setHidden(true)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .build())
+        .setValidationFormat(Joi.string().isoDate())
+        .setDocumentation("A time value given in ISO8601 combined date and time format that represents when the volume snapshot was created.")
+        .build();
+
+    // Size in gigabytes property (read-only)
+    const sizeGigabytesProp = new PropBuilder()
+        .setName("size_gigabytes")
+        .setKind("float")
+        .setHidden(true)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .build())
+        .setValidationFormat(Joi.number().integer().min(1))
+        .setDocumentation("The size of the volume snapshot in GiB (1024^3).")
+        .build();
+
+    // Regions property (read-only)
+    const regionsProp = new PropBuilder()
+        .setName("regions")
+        .setKind("array")
+        .setHidden(true)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("array")
+            .build())
+        .setEntry(
+            new PropBuilder()
+                .setName("regions_item")
+                .setKind("string")
+                .setWidget(new PropWidgetDefinitionBuilder().setKind("text").build())
+                .setValidationFormat(Joi.string())
+                .build()
+        )
+        .setValidationFormat(Joi.array().items(Joi.string()).default([]))
+        .setDocumentation("An array of region slugs where the snapshot is available for use in creating new volumes.")
+        .build();
+
+    // Min disk size property (read-only)
+    const minDiskSizeProp = new PropBuilder()
+        .setName("min_disk_size")
+        .setKind("float")
+        .setHidden(true)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .build())
+        .setValidationFormat(Joi.number().integer().min(0))
+        .setDocumentation("The minimum size in GiB required for a volume to be created based on this volume snapshot.")
+        .build();
+
+    // Resource ID property (read-only)
+    const resourceIdProp = new PropBuilder()
+        .setName("resource_id")
+        .setKind("string")
+        .setHidden(true)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .build())
+        .setValidationFormat(Joi.string().uuid())
+        .setDocumentation("The unique identifier for the volume from which the snapshot originated.")
+        .build();
+
+    // Resource type property (read-only)
+    const resourceTypeProp = new PropBuilder()
+        .setName("resource_type")
+        .setKind("string")
+        .setHidden(true)
+        .setWidget(new PropWidgetDefinitionBuilder()
+            .setKind("text")
+            .build())
+        .setValidationFormat(Joi.string().valid("volume"))
+        .setDocumentation("The type of resource that the snapshot originated from.")
+        .build();
+
+    // Create the asset
+    const asset = new AssetBuilder()
+        .addProp(volumeIdProp)
+        .addProp(nameProp)
+        .addProp(tagsProp)
+        .addProp(idProp)
+        .addProp(createdAtProp)
+        .addProp(sizeGigabytesProp)
+        .addProp(regionsProp)
+        .addProp(minDiskSizeProp)
+        .addProp(resourceIdProp)
+        .addProp(resourceTypeProp)
+        .build();
+
+    return asset;
+}

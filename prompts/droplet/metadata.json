@@ -1,0 +1,5 @@
+{
+  "name": "DigitalOcean Droplet",
+  "description": "Virtual private servers that can be used to run applications and host websites",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Droplets"
+}

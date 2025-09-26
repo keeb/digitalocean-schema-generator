@@ -1,0 +1,5 @@
+{
+  "name": "DigitalOcean Firewall",
+  "description": "Cloud firewalls that provide the ability to restrict network access to and from a Droplet allowing you to define which ports will accept inbound or outbound connections",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Firewalls"
+}

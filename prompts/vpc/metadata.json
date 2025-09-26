@@ -1,0 +1,5 @@
+{
+  "name": "DigitalOcean VPC",
+  "description": "Virtual Private Cloud that provides isolated network environments for your DigitalOcean resources",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/VPCs"
+}

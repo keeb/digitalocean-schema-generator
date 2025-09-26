@@ -1,0 +1,5 @@
+{
+  "name": "DigitalOcean Volume",
+  "description": "Block storage volumes that can be attached to Droplets to provide additional storage capacity",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Block-Storage"
+}

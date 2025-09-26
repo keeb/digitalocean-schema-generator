@@ -1,0 +1,5 @@
+{
+  "name": "DigitalOcean Project",
+  "description": "A project is a workspace for organizing resources across multiple cloud services. It allows teams to manage infrastructure, collaborate, and track resource usage across environments like development, staging, and production.",
+  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Projects"
+}
