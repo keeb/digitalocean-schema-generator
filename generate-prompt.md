@@ -127,17 +127,11 @@ function main() {
 - **Required Properties**: Use `Joi.string().required()` for mandatory fields
 - **Documentation**: Extract description from API spec and use exact text
 - **Naming**: Use DigitalOcean's native property names (no AWS-style conversion)
-- **Service Mapping**: Map to appropriate DO service namespace:
-  - Droplets → `DigitalOcean::Compute::Droplet`
-  - Volumes → `DigitalOcean::Storage::Volume`
-  - LoadBalancers → `DigitalOcean::Networking::LoadBalancer`
-  - Databases → `DigitalOcean::Database::{Engine}`
-  - Kubernetes → `DigitalOcean::Container::Cluster`
 
 ### Output Format:
-Create a new directory: `prompts/{resource-name}/`
-Write the complete schema to: `prompts/{resource-name}/{resource-name}-schema.js`
-Create a metadata file: `prompts/{resource-name}/metadata.json`
+Create a new directory: `schema/{resource-name}/`
+Write the complete schema to: `schema/{resource-name}/{resource-name}-schema.js`
+Create a metadata file: `schema/{resource-name}/metadata.json`
 
 ### Metadata File Format:
 ```json
