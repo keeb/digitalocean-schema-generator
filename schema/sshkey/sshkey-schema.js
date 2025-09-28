@@ -26,7 +26,7 @@ function main() {
             .setKind("textArea")
             .setCreateOnly()
             .build())
-        .setValidationFormat(Joi.string().required().pattern(/^(ssh-rsa|ssh-dss|ssh-ed25519|ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521)\s+[A-Za-z0-9+\/]+[=]{0,2}(\s+.*)?$/))
+        .setValidationFormat(Joi.string().required().trim().pattern(/^(ssh-rsa|ssh-dss|ssh-ed25519|ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521)\s+[A-Za-z0-9+\/=]+(\s+.*)?$/))
         .setDocumentation("The entire public key string that was uploaded. Embedded into the root user's `authorized_keys` file if you include this key during Droplet creation.")
         .build();
 
