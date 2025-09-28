@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Name property (required)
     const nameProp = new PropBuilder()
         .setName("name")
@@ -24,39 +30,20 @@ function main() {
         .setDocumentation("The entire public key string that was uploaded. Embedded into the root user's `authorized_keys` file if you include this key during Droplet creation.")
         .build();
 
-    // ID property (read-only, computed)
-    const idProp = new PropBuilder()
-        .setName("id")
-        .setKind("float")
-        .setHidden(false)
-        .setWidget(new PropWidgetDefinitionBuilder()
-            .setKind("text")
-            .setReadOnly()
-            .build())
-        .setValidationFormat(Joi.number().integer().min(1))
-        .setDocumentation("A unique identification number for this key. Can be used to embed a specific SSH key into a Droplet.")
-        .build();
-
-    // Fingerprint property (read-only, computed)
     const fingerprintProp = new PropBuilder()
-        .setName("fingerprint")
-        .setKind("string")
-        .setHidden(false)
-        .setWidget(new PropWidgetDefinitionBuilder()
-            .setKind("text")
-            .setReadOnly()
-            .build())
-        .setValidationFormat(Joi.string().pattern(/^([0-9a-f]{2}:){15}[0-9a-f]{2}$/))
-        .setDocumentation("A unique identifier that differentiates this key from other keys using a format that SSH recognizes. The fingerprint is created when the key is added to your account.")
-        .build();
+          .setName("fingerprint")
+          .setKind("string")
+          .build();
+
 
     // Create the asset
     const asset = new AssetBuilder()
         .addProp(nameProp)
         .addProp(publicKeyProp)
-        .addProp(idProp)
-        .addProp(fingerprintProp)
+        .addSecretProp(DOCredentialSecretProp)
+      .addResourceProp(fingerprintProp)
         .build();
 
     return asset;
 }
+

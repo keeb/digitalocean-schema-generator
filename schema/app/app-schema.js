@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret (ALWAYS REQUIRED)
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Main app properties from apps_create_app_request
     
     // Project ID property (optional)
@@ -255,6 +261,7 @@ function main() {
     const asset = new AssetBuilder()
         .addProp(projectIdProp)
         .addProp(specProp)
+        .addSecretProp(DOCredentialSecretProp)  // ALWAYS INCLUDE THIS
         .build();
 
     return asset;

@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Volume ID property (required) - The source volume to create snapshot from
     const volumeIdProp = new PropBuilder()
         .setName("volume_id")
@@ -38,7 +44,6 @@ function main() {
                 .setName("tags_item")
                 .setKind("string")
                 .setWidget(new PropWidgetDefinitionBuilder().setKind("text").build())
-                .setValidationFormat(Joi.string())
                 .build()
         )
         .setValidationFormat(Joi.array().items(Joi.string()).default([]))
@@ -151,6 +156,7 @@ function main() {
         .addProp(minDiskSizeProp)
         .addProp(resourceIdProp)
         .addProp(resourceTypeProp)
+        .addSecretProp(DOCredentialSecretProp)
         .build();
 
     return asset;

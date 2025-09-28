@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret (ALWAYS REQUIRED)
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Name property (required)
     const nameProp = new PropBuilder()
         .setName("name")
@@ -184,6 +190,7 @@ function main() {
         .addProp(idProp)
         .addProp(dropletIdsProp)
         .addProp(createdAtProp)
+        .addSecretProp(DOCredentialSecretProp)  // ALWAYS INCLUDE THIS
         .build();
 
     return asset;

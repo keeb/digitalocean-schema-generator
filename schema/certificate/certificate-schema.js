@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Name property (required)
     const nameProp = new PropBuilder()
         .setName("name")
@@ -166,6 +172,7 @@ function main() {
         .addProp(notAfterProp)
         .addProp(createdAtProp)
         .addProp(stateProp)
+        .addSecretProp(DOCredentialSecretProp)
         .build();
 
     return asset;

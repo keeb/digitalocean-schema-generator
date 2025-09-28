@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Origin property (required) - the source domain for the CDN
     const originProp = new PropBuilder()
         .setName("origin")
@@ -98,6 +104,7 @@ function main() {
         .addProp(idProp)
         .addProp(endpointProp)
         .addProp(createdAtProp)
+        .addSecretProp(DOCredentialSecretProp)
         .build();
 
     return asset;

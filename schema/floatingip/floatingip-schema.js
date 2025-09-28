@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Type property - required to specify if assigning to droplet or reserving to region
     const typeProp = new PropBuilder()
         .setName("type")
@@ -38,15 +44,15 @@ function main() {
         .setHidden(false)
         .setWidget(new PropWidgetDefinitionBuilder()
             .setKind("comboBox")
-            .addOption("nyc1", "New York 1")
-            .addOption("nyc3", "New York 3")
-            .addOption("ams3", "Amsterdam 3")
-            .addOption("sfo3", "San Francisco 3")
-            .addOption("sgp1", "Singapore 1")
-            .addOption("lon1", "London 1")
-            .addOption("fra1", "Frankfurt 1")
-            .addOption("tor1", "Toronto 1")
-            .addOption("blr1", "Bangalore 1")
+            .addOption("New York 1", "nyc1")
+            .addOption("New York 3", "nyc3")
+            .addOption("Amsterdam 3", "ams3")
+            .addOption("San Francisco 3", "sfo3")
+            .addOption("Singapore 1", "sgp1")
+            .addOption("London 1", "lon1")
+            .addOption("Frankfurt 1", "fra1")
+            .addOption("Toronto 1", "tor1")
+            .addOption("Bangalore 1", "blr1")
             .setCreateOnly()
             .build())
         .setValidationFormat(Joi.string().when('type', {
@@ -80,12 +86,10 @@ function main() {
             .build())
         .setEntry(
             new PropBuilder()
-            .setName("tags_item")
-            .setKind("string")
-            .setWidget(new PropWidgetDefinitionBuilder().setKind("text").build())
-            .setValidationFormat(Joi.string().max(255))
-            .setDocumentation("A tag name")
-            .build()
+                .setName("tags_item")
+                .setKind("string")
+                .setWidget(new PropWidgetDefinitionBuilder().setKind("text").build())
+                .build()
         )
         .setValidationFormat(Joi.array().items(Joi.string().max(255)).max(50))
         .setDocumentation("An array of tags to apply to the floating IP. Tag names can contain letters, numbers, colons, dashes, and underscores.")
@@ -98,6 +102,7 @@ function main() {
         .addProp(regionProp)
         .addProp(projectIdProp)
         .addProp(tagsProp)
+        .addSecretProp(DOCredentialSecretProp)
         .build();
 
     return asset;

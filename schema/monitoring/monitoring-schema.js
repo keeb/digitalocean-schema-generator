@@ -1,4 +1,10 @@
 function main() {
+    // DigitalOcean API Token secret
+    const DOCredentialSecretProp = new SecretPropBuilder()
+        .setName("DigitalOcean Credential")
+        .setSecretKind("DigitalOcean Credential")
+        .build();
+
     // Type property - monitoring metric type (required, createOnly)
     const typeProp = new PropBuilder()
         .setName("type")
@@ -136,8 +142,6 @@ function main() {
                 .setName("tags_item")
                 .setKind("string")
                 .setWidget(new PropWidgetDefinitionBuilder().setKind("text").build())
-                .setValidationFormat(Joi.string())
-                .setDocumentation("Tag name")
                 .build()
         )
         .setValidationFormat(Joi.array().items(Joi.string()).required())
@@ -261,6 +265,7 @@ function main() {
         .addProp(tagsProp)
         .addProp(enabledProp)
         .addProp(alertsProp)
+        .addSecretProp(DOCredentialSecretProp)
         .build();
 
     return asset;
