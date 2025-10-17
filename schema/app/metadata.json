@@ -1,5 +1,5 @@
 {
   "name": "DigitalOcean App Platform",
   "description": "A Platform-as-a-Service (PaaS) offering that allows developers to publish code directly to DigitalOcean servers without worrying about the underlying infrastructure. Supports web services, background workers, static sites, databases, and serverless functions with automatic scaling, deployments, and HTTPS.",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Apps"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Apps"
 }

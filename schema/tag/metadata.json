@@ -1,5 +1,5 @@
 {
   "name": "DigitalOcean Tag",
   "description": "Labels that can be applied to resources (Droplets, Images, Volumes, Volume Snapshots, and Database clusters) to better organize and facilitate lookups and actions",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Tags"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Tags"
 }

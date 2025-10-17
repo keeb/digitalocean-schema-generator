@@ -1,0 +1,1 @@
+{"name": "sshkey-destroy", "displayName": "SSH Key Destroy", "description": "Deletes an SSH key from DigitalOcean"}

@@ -1,0 +1,5 @@
+{
+  "name": "kubernetes-destroy",
+  "displayName": "kubernetes-destroy",
+  "description": "optional"
+}

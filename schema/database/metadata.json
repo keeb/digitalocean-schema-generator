@@ -1,5 +1,5 @@
 {
   "name": "DigitalOcean Database Cluster",
   "description": "Managed database clusters supporting PostgreSQL, MySQL, Redis, MongoDB, Kafka, OpenSearch, and Valkey with automated backups, scaling, and high availability",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Databases"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Databases"
 }

@@ -1,5 +1,6 @@
 {
   "name": "DigitalOcean Monitoring Alert Policy",
+  "category": "",
   "description": "Configure alert policies to monitor metrics and send notifications when thresholds are breached for Droplets, Load Balancers, and Databases",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Monitoring"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Monitoring"
 }

@@ -1,5 +1,5 @@
 {
   "name": "DigitalOcean Functions",
   "description": "Serverless functions platform that allows you to develop and deploy functions without managing servers. Deploy functions in namespaces with triggers and environment variables.",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Functions"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Functions"
 }

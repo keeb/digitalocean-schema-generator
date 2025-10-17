@@ -1,0 +1,5 @@
+{
+  "name": "kubernetes-import",
+  "displayName": "Import Empty Resource",
+  "description": "optional"
+}

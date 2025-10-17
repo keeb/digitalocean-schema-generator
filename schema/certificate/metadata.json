@@ -1,5 +1,5 @@
 {
   "name": "DigitalOcean SSL Certificate",
   "description": "SSL/TLS certificates for securing web applications, supporting both Let's Encrypt automatic certificates and custom user-uploaded certificates",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Certificates"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Certificates"
 }

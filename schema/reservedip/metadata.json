@@ -1,5 +1,6 @@
 {
   "name": "DigitalOcean Reserved IP",
+  "category": "",
   "description": "Static IPv4 and IPv6 addresses that can be assigned to Droplets and moved between them for high availability and failover scenarios",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Reserved-IPs"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Reserved-IPs"
 }

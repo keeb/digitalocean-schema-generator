@@ -1,5 +1,6 @@
 {
   "name": "DigitalOcean Load Balancer",
+  "category": "",
   "description": "Load balancers distribute traffic across multiple backend Droplets, improving application performance and redundancy",
-  "link": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Load-Balancers"
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/Load-Balancers"
 }
