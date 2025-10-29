@@ -1,0 +1,5 @@
+{
+  "name": "authenticate",
+  "displayName": "Authenticate with DigitalOcean",
+  "description": "Sets up API token for DigitalOcean authentication"
+}
