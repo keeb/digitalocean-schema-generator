@@ -35,7 +35,7 @@ if is_credential:
     schema_id = "00000000000000000000000000"
     schema_variant_id = schema_result["defaultVariantId"]
 
-    auth_filename = filename.replace("-credential-schema.js", "-auth-func.js")
+    auth_filename = filename.replace("-credential-schema.ts", "-auth-func.ts")
 
     if os.path.exists(auth_filename):
         print(f"Found auth file: {auth_filename}")
@@ -53,7 +53,7 @@ if is_credential:
     else:
         print(f"Warning: Auth file not found at {auth_filename}")
 
-    qualification_filename = filename.replace("-auth-func.js", "-qualification-func.js")
+    qualification_filename = filename.replace("-auth-func.ts", "-qualification-func.ts")
 
     if os.path.exists(qualification_filename):
         print(f"Found qualification file: {qualification_filename}")

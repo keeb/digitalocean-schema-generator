@@ -4,35 +4,87 @@
 You are generating SI asset schemas for DigitalOcean resources following the upstream `si-conduit` format.
 Reference the sshkey example at `/home/keeb/git/si/bin/si-conduit/sshkey/` to understand the directory structure and file organization.
 
+## Schema Directory Naming Convention
+
+**IMPORTANT**: The `<schema-name>` directory must be normalized using the `normalizeFsName` function from si-conduit.
+
+The normalization rules are:
+- Replace any character that isn't alphanumeric (A-Z, a-z, 0-9), period (`.`), underscore (`_`), or hyphen (`-`) with a hyphen (`-`)
+- Preserve: letters, digits, `.`, `_`, `-`
+- Replace: all other characters (including spaces) become hyphens
+
+**Examples:**
+- `"DigitalOcean SSH Key"` → `"DigitalOcean-SSH-Key"`
+- `"DigitalOcean App Platform"` → `"DigitalOcean-App-Platform"`
+- `"DigitalOcean CDN Endpoint"` → `"DigitalOcean-CDN-Endpoint"`
+- `"User/Admin"` → `"User-Admin"`
+- `"test@example.com"` → `"test-example.com"`
+
+The directory name is derived from the `name` property in `schema.metadata.json`, normalized with this function.
+
+## Function File Naming Convention
+
+**CRITICAL**: All function files (actions, codeGenerators, management, qualifications) must also follow the `normalizeFsName` convention.
+
+The file naming rules are:
+1. The `name` property in each function's `.metadata.json` file is the source of truth
+2. The filename prefix is `normalizeFsName(metadata.name)`
+3. Both the `.metadata.json` and `.ts` files share the same normalized prefix
+
+**Example**: If a qualification function has:
+```json
+{
+  "name": "Fields Are Valid",
+  ...
+}
+```
+
+Then the files should be named:
+- `Fields-Are-Valid.metadata.json`
+- `Fields-Are-Valid.ts`
+
+**Common Examples:**
+- `name: "app-create"` → files: `app-create.metadata.json`, `app-create.ts`
+- `name: "droplet-qualification"` → files: `droplet-qualification.metadata.json`, `droplet-qualification.ts`
+- `name: "sshkey-import"` → files: `sshkey-import.metadata.json`, `sshkey-import.ts`
+- `name: "vpc codegen"` → files: `vpc-codegen.metadata.json`, `vpc-codegen.ts` (space becomes hyphen)
+
+**Note**: The same `normalizeFsName` normalization function applies to both schema directories AND function filenames.
+
 ## Asset Structure Overview
-Each DigitalOcean resource creates an asset with the following directory layout:
+Each DigitalOcean resource creates an asset following the si-conduit standardized project structure:
 
 ```
-schema/{resource-name}/
-  ├── metadata.json                    # Asset metadata
-  ├── index.ts                         # Main schema definition (PropBuilder)
-  ├── .format-version                  # Format version (0)
-  ├── actions/
-  │   ├── create.ts                    # Create action implementation
-  │   ├── create.json                  # Create action metadata
-  │   ├── destroy.ts                   # Destroy/delete action implementation
-  │   ├── destroy.json                 # Destroy action metadata
-  │   ├── refresh.ts                   # Refresh/read action implementation
-  │   ├── refresh.json                 # Refresh action metadata
-  │   └── update.ts                    # Update action implementation
-  │       └── update.json              # Update action metadata
-  ├── codeGenerators/
-  │   ├── sample.ts                    # Code generation function (e.g., for JSON payloads)
-  │   └── sample.json                  # Code generator metadata
-  ├── management/
-  │   ├── sample.ts                    # Resource discovery/import function
-  │   └── sample.json                  # Discovery/import metadata
-  └── qualifications/
-      └── sample.ts                    # Qualification/validation function (optional)
+├── .conduitroot                       # Marker file identifying the project root
+└── schemas/
+    └── <schema-name>/                  # Normalized directory name (see naming convention above)
+        ├── .format-version            # Format version (0)
+        ├── schema.ts                  # Main schema definition (PropBuilder)
+        ├── schema.metadata.json       # Asset metadata
+        ├── actions/
+        │   ├── <name>.ts              # Create action implementation (filename = normalizeFsName(metadata.name))
+        │   ├── <name>.metadata.json   # Create action metadata (contains the "name" property)
+        │   ├── <name>.ts              # Destroy/delete action implementation
+        │   ├── <name>.metadata.json   # Destroy action metadata
+        │   ├── <name>.ts              # Refresh/read action implementation
+        │   ├── <name>.metadata.json   # Refresh action metadata
+        │   ├── <name>.ts              # Update action implementation
+        │   └── <name>.metadata.json   # Update action metadata
+        ├── codeGenerators/
+        │   ├── <name>.ts              # Code generation function (filename = normalizeFsName(metadata.name))
+        │   └── <name>.metadata.json   # Code generator metadata (contains the "name" property)
+        ├── management/
+        │   ├── <name>.ts              # Resource discovery/import function (filename = normalizeFsName(metadata.name))
+        │   └── <name>.metadata.json   # Management metadata (contains the "name" property)
+        └── qualifications/
+            ├── <name>.ts              # Qualification/validation function (filename = normalizeFsName(metadata.name))
+            └── <name>.metadata.json   # Qualification metadata (contains the "name" property)
 
 ## Instructions
 
 Generate a complete SI asset for the DigitalOcean resource: `{RESOURCE_NAME}`
+
+**CRITICAL**: The schema directory name must be normalized using `normalizeFsName()` - see "Schema Directory Naming Convention" above.
 
 ### Required Steps:
 1. **Extract Schema Definition**: Search for the creation schema in `digitalocean-api-spec.yaml` using patterns like:
@@ -227,15 +279,17 @@ const asset = new AssetBuilder()
 ### Output Format:
 Create a new directory structure following the si-conduit pattern:
 
+**IMPORTANT**: The directory name `<schema-name>` must be the normalized version of the schema's `name` field using the `normalizeFsName` convention described above.
+
 ```
-schema/{resource-name}/
-  ├── metadata.json
-  ├── index.ts
+schemas/<schema-name>/                  # Directory name = normalizeFsName(metadata.name)
   ├── .format-version
+  ├── schema.ts
+  ├── schema.metadata.json
   ├── actions/
   ├── codeGenerators/
   ├── management/
-  └── qualifications/ (optional)
+  └── qualifications/
 ```
 
 ### Core Files to Generate:
@@ -243,7 +297,7 @@ schema/{resource-name}/
 #### 1. `.format-version`
 Single line containing: `0`
 
-#### 2. `metadata.json` - Asset Metadata
+#### 2. `schema.metadata.json` - Asset Metadata
 ```json
 {
   "name": "{resource-name}",
@@ -253,21 +307,23 @@ Single line containing: `0`
 }
 ```
 
-Example for sshkey:
+**Note**: The directory name is the normalized version of the `name` field. For example, if the name is "DigitalOcean SSH Key", the directory would be `schemas/DigitalOcean-SSH-Key/`.
+
+Example for DigitalOcean SSH Key:
 ```json
 {
-  "name": "sshkey",
+  "name": "DigitalOcean SSH Key",
   "category": "",
-  "description": "SSH keys for DigitalOcean resources",
+  "description": "SSH keys are used to provide secure access to Droplets and other resources. They are embedded into the root user's authorized_keys file when included during resource creation.",
   "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#tag/SSH-Keys"
 }
 ```
 
-#### 3. `index.ts` - PropBuilder Schema
+#### 3. `schema.ts` - PropBuilder Schema
 Main schema definition file containing the AssetBuilder configuration.
 
 #### 4. Actions Directory (`actions/`)
-Each action has two files: a TypeScript implementation (`.ts`) and JSON metadata (`.json`).
+Each action has two files: a TypeScript implementation (`.ts`) and JSON metadata (`.metadata.json`).
 
 **Action Files Template (`{action}.ts`):**
 ```typescript
@@ -279,7 +335,7 @@ function main(input: Input) {
 }
 ```
 
-**Action Metadata Template (`{action}.json`):**
+**Action Metadata Template (`<name>.metadata.json`):**
 ```json
 {
   "name": "{resource-name}-{action}",
@@ -288,11 +344,15 @@ function main(input: Input) {
 }
 ```
 
+**IMPORTANT**: The filename prefix is `normalizeFsName(metadata.name)`. For example:
+- If `name: "droplet-create"`, files are `droplet-create.metadata.json` and `droplet-create.ts`
+- If `name: "app create"`, files are `app-create.metadata.json` and `app-create.ts`
+
 **Required Actions:**
-- **create.ts / create.json** - Creates a new resource
-- **destroy.ts / destroy.json** - Deletes/destroys a resource
-- **refresh.ts / refresh.json** - Reads/refreshes resource state
-- **update.ts / update.json** - Updates an existing resource
+- **{normalized-name}.ts / {normalized-name}.metadata.json** - Creates a new resource (e.g., `droplet-create.ts`)
+- **{normalized-name}.ts / {normalized-name}.metadata.json** - Deletes/destroys a resource (e.g., `droplet-destroy.ts`)
+- **{normalized-name}.ts / {normalized-name}.metadata.json** - Reads/refreshes resource state (e.g., `droplet-refresh.ts`)
+- **{normalized-name}.ts / {normalized-name}.metadata.json** - Updates an existing resource (e.g., `droplet-update.ts`)
 
 Reference implementations from current schema structure:
 - Use the patterns from `/home/keeb/git/schema-generator/schema/sshkey/actions/` as guides
@@ -301,7 +361,7 @@ Reference implementations from current schema structure:
 #### 5. Code Generators Directory (`codeGenerators/`)
 Generates code (typically JSON payloads) for API interactions.
 
-**Code Generator Template (`sample.ts`):**
+**Code Generator Template (`<codegen-name>.ts`):**
 ```typescript
 function main() {
   const code = {};
@@ -312,7 +372,7 @@ function main() {
 }
 ```
 
-**Code Generator Metadata (`sample.json`):**
+**Code Generator Metadata (`<name>.metadata.json`):**
 ```json
 {
   "name": "{resource-name}-codegen",
@@ -321,10 +381,14 @@ function main() {
 }
 ```
 
+**IMPORTANT**: The filename prefix is `normalizeFsName(metadata.name)`. For example:
+- If `name: "droplet-codegen"`, files are `droplet-codegen.metadata.json` and `droplet-codegen.ts`
+- If `name: "app codegen"`, files are `app-codegen.metadata.json` and `app-codegen.ts`
+
 #### 6. Management Directory (`management/`)
 Handles resource discovery and import operations.
 
-**Management Template (`sample.ts`):**
+**Management Template (`<management-name>.ts`):**
 ```typescript
 function main() {
   const ops = {
@@ -345,7 +409,7 @@ function main() {
 }
 ```
 
-**Management Metadata (`sample.json`):**
+**Management Metadata (`<name>.metadata.json`):**
 ```json
 {
   "name": "{resource-name}-import",
@@ -354,10 +418,14 @@ function main() {
 }
 ```
 
-#### 7. Qualifications Directory (`qualifications/`) - Optional
+**IMPORTANT**: The filename prefix is `normalizeFsName(metadata.name)`. For example:
+- If `name: "droplet-import"`, files are `droplet-import.metadata.json` and `droplet-import.ts`
+- If `name: "app import"`, files are `app-import.metadata.json` and `app-import.ts`
+
+#### 7. Qualifications Directory (`qualifications/`)
 Contains validation/qualification functions.
 
-**Qualification Template (`sample.ts`):**
+**Qualification Template (`<qualification-name>.ts`):**
 ```typescript
 function main(input: Input) {
   return {
@@ -365,6 +433,19 @@ function main(input: Input) {
   }
 }
 ```
+
+**Qualification Metadata (`<name>.metadata.json`):**
+```json
+{
+  "name": "{resource-name}-qualification",
+  "displayName": "Qualification",
+  "description": "optional"
+}
+```
+
+**IMPORTANT**: The filename prefix is `normalizeFsName(metadata.name)`. For example:
+- If `name: "droplet-qualification"`, files are `droplet-qualification.metadata.json` and `droplet-qualification.ts`
+- If `name: "app qualification"`, files are `app-qualification.metadata.json` and `app-qualification.ts`
 
 ### Resource-Specific Notes:
 - **Droplets**: Include size options, image options, region options
@@ -445,28 +526,36 @@ const newDroplet = await doApiFetch('/droplets', {
 
 For resource `{RESOURCE_NAME}`, create all files in the structure:
 
+**Remember**: The `<schema-name>` directory must use the normalized name: `normalizeFsName(metadata.name)`.
+
 ```
-schema/{resource-name}/
-├── .format-version          # Contains: 0
-├── metadata.json            # Asset metadata
-├── index.ts                 # PropBuilder schema definition
+schemas/<schema-name>/              # Directory name = normalizeFsName(metadata.name)
+├── .format-version                # Contains: 0
+├── schema.ts                      # PropBuilder schema definition
+├── schema.metadata.json           # Asset metadata (contains the human-readable name)
 ├── actions/
-│   ├── create.ts            # Create action stub
-│   ├── create.json          # Create action metadata
-│   ├── destroy.ts           # Destroy action stub
-│   ├── destroy.json         # Destroy action metadata
-│   ├── refresh.ts           # Refresh action stub
-│   ├── refresh.json         # Refresh action metadata
-│   ├── update.ts            # Update action stub
-│   └── update.json          # Update action metadata
+│   ├── <name>.ts                  # Create action stub (filename = normalizeFsName(metadata.name))
+│   ├── <name>.metadata.json       # Create action metadata
+│   ├── <name>.ts                  # Destroy action stub (filename = normalizeFsName(metadata.name))
+│   ├── <name>.metadata.json       # Destroy action metadata
+│   ├── <name>.ts                  # Refresh action stub (filename = normalizeFsName(metadata.name))
+│   ├── <name>.metadata.json       # Refresh action metadata
+│   ├── <name>.ts                  # Update action stub (filename = normalizeFsName(metadata.name))
+│   └── <name>.metadata.json       # Update action metadata
 ├── codeGenerators/
-│   ├── sample.ts            # Code generation stub
-│   └── sample.json          # Code generator metadata
+│   ├── <name>.ts                  # Code generation stub (filename = normalizeFsName(metadata.name))
+│   └── <name>.metadata.json       # Code generator metadata
 ├── management/
-│   ├── sample.ts            # Import/discovery stub
-│   └── sample.json          # Management metadata
-└── qualifications/          # Optional
-    └── sample.ts            # Qualification stub (optional)
+│   ├── <name>.ts                  # Import/discovery stub (filename = normalizeFsName(metadata.name))
+│   └── <name>.metadata.json       # Management metadata
+└── qualifications/
+    ├── <name>.ts                  # Qualification stub (filename = normalizeFsName(metadata.name))
+    └── <name>.metadata.json       # Qualification metadata
 ```
+
+**Examples**:
+- For a schema with `name: "DigitalOcean SSH Key"`, create the directory `schemas/DigitalOcean-SSH-Key/`
+- For an action with `name: "sshkey-create"`, create files `sshkey-create.ts` and `sshkey-create.metadata.json`
+- For a qualification with `name: "app qualification"`, create files `app-qualification.ts` and `app-qualification.metadata.json`
 
 Generate the complete asset now for: `{RESOURCE_NAME}`

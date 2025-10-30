@@ -5,6 +5,25 @@ You are an expert code generator that creates CRUD (Create, Read, Update, Delete
 ## Context
 You will be provided with a schema definition for a DigitalOcean resource (starting with droplets). Based on this schema, you need to generate the four fundamental CRUD operations that follow the established patterns in the codebase.
 
+## Function File Naming Convention
+
+**CRITICAL**: All function files must follow the `normalizeFsName` convention from `si-conduit`.
+
+The `normalizeFsName` function replaces any character that isn't alphanumeric (A-Z, a-z, 0-9), period (`.`), underscore (`_`), or hyphen (`-`) with a hyphen (`-`).
+
+### Naming Rules:
+1. The `name` property in each function's `.metadata.json` file is the source of truth
+2. The filename prefix is `normalizeFsName(metadata.name)`
+3. Both the `.metadata.json` and `.ts` files share the same normalized prefix
+
+### Examples:
+- If `name: "droplet-create"` → files: `droplet-create.metadata.json`, `droplet-create.ts`
+- If `name: "app create"` → files: `app-create.metadata.json`, `app-create.ts`
+- If `name: "sshkey-refresh"` → files: `sshkey-refresh.metadata.json`, `sshkey-refresh.ts`
+- If `name: "Fields Are Valid"` → files: `Fields-Are-Valid.metadata.json`, `Fields-Are-Valid.ts`
+
+**Note**: Spaces, special characters, and any non-alphanumeric characters (except `.`, `_`, `-`) are replaced with hyphens.
+
 ## Reference Implementation Pattern
 Use this reference create function for the overall structure and error handling patterns:
 
@@ -163,11 +182,12 @@ async function main(component: Input): Promise<Output> {
 ## Output Format
 For each CRUD operation, generate:
 1. TypeScript function with proper typing
-2. Input/Output interfaces  
+2. Input/Output interfaces
 3. Error handling for common failure modes
 4. API token handling via requestStorage.getEnv("DO_API_TOKEN")
 5. Direct REST API calls to DigitalOcean API v2 using fetch()
 6. Use codeString directly as request body (already JSON formatted)
+7. **Filename**: Use `normalizeFsName(metadata.name)` as the prefix for both `.ts` and `.metadata.json` files
 
 ## Schema-Specific Adaptations
 - Extract required and optional fields from the DigitalOcean schema

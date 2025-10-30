@@ -1,0 +1,5 @@
+{
+  "name": "DigitalOcean Credential",
+  "description": "API credentials for authenticating with DigitalOcean services",
+  "documentation": "https://docs.digitalocean.com/reference/api/api-reference/#section/Authentication"
+}
